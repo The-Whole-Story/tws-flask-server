@@ -22,6 +22,22 @@ def getTitleFromEntities(titles):
 
 
 
+def getEntitesFromArticle(article):
+    entities = []
+    entityTypesToIgnore = ['MONEY', 'TIME', 'CARDINAL', 'DATE', 'PERCENT', 'ORDINAL']
+    articleToAnalyze = nlp(article)
+    for entity in articleToAnalyze.ents:
+        if entity.text not in entities:
+            if entity.label_ not in entityTypesToIgnore:
+                entities.append(entity.text)
+    return entities
+
+
 @app.route('/title')
 def title():
     return jsonify(getTitleFromEntities(request.get_json()))
+
+
+@app.route('/article')
+def article():
+    return jsonify(getEntitesFromArticle(request.get_json()))
